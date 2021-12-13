@@ -10,33 +10,51 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 contract ElfNFT is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
-
     string private _collectionURI;
+
+    string public baseURI;
+    string public baseExtension = ".json";
+
+    // max supply of reindeer
+    uint256 public maxSupplySanta = 5;
+    uint256 public mintedSantas = 0;
+
+    // max supply of reindeer
+    uint256 public maxSupplyReindeer = 750;
+    uint256 public mintedReindeers = 0;
+
+    // max supply of elves
+    uint256 public maxSupplyElves = 4000;
+    uint256 public mintedElves = 0;
 
     // The whitelist of reindeers
     mapping(address => bool) public reindeerWhitelist;
 
-    // The whitelist of token holders
-    mapping(address => bool) public tokenHolderWhitelist;
+    // The whitelist for santa (top contributors)
+    mapping(address => bool) public santaWhitelist;
 
-    // The public mint price
-    uint256 public elfPrice;
+    // The public mint elf price
+    uint256 public elfPrice = 0.05 ether; // TODO: decide on price
 
-    constructor() ERC721("Elf DAO NFT", "ELFDAO") {
-        setCollectionURI(""); // TODO: set collection URI
-        elfPrice = 0.08 ether; // TODO: decide on price
+    // The public mint elf price
+    uint256 public reindeerPrice = 0.1 ether; // TODO: decide on price
+
+    constructor(string memory _baseURI, string memory _baseExtension, string memory collectionURI) ERC721("ElfDAO NFT", "ELFDAO") {
+        setCollectionURI(collectionURI);
+        setBaseURI(_baseURI);
+        setBaseExtension(_baseExtension);
     }
 
-    function setElfPrice(uint256 _price) public onlyOwner  {
-      elfPrice = _price;
+    function setPrice(uint256 _elfPrice, uint256 _reindeerPrice) public onlyOwner  {
+      elfPrice = _elfPrice;
+      reindeerPrice = _reindeerPrice;
     }
 
-    function mintNFT(address recipient, string memory tokenURI) public onlyOwner returns (uint256)
+    function mintNFT(address recipient) public onlyOwner returns (uint256)
     {
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
         _mint(recipient, newItemId);
-        _setTokenURI(newItemId, tokenURI);
         return newItemId;
     }
 
@@ -57,7 +75,7 @@ contract ElfNFT is ERC721URIStorage, Ownable {
 
 
     /**
-     * @dev reverse mistakes for for reindeer whitelist
+     * @dev reverse accounts from reindeer whitelist
      */
     function removeReindeerWhitelists(address[] memory _addresses) public onlyOwner {
         for (uint256 i = 0; i < _addresses.length; i++) {
@@ -67,27 +85,28 @@ contract ElfNFT is ERC721URIStorage, Ownable {
 
 
     /**
-     * @dev for token holder whitelist
+     * @dev for top 5 contributors
      */
-    function setTokenHolderWhitelist(
+    function setSantaWhitelist(
         address[] memory _addresses
     ) public onlyOwner {
+        require(_addresses.length <= 5); // maxSupply is 5
         for (uint256 i = 0; i < _addresses.length; i++) {
             require(
                 _addresses[i] != address(0),
                 "can't add the blackhole address"
             );
-            tokenHolderWhitelist[_addresses[i]] = true;
+            santaWhitelist[_addresses[i]] = true;
         }
     }
 
 
     /**
-     * @dev reverse mistakes for for token whitelist
+     * @dev remove users from Santa whitelist
      */
-    function removeTokenWhitelists(address[] memory _addresses) public onlyOwner {
+    function removeSantaWhitelists(address[] memory _addresses) public onlyOwner {
         for (uint256 i = 0; i < _addresses.length; i++) {
-            tokenHolderWhitelist[_addresses[i]] = false;
+            santaWhitelist[_addresses[i]] = false;
         }
     }
 
@@ -100,6 +119,8 @@ contract ElfNFT is ERC721URIStorage, Ownable {
         returns (uint256)
     {
         require(reindeerWhitelist[msg.sender], "Not on the reindeer whitelist");
+        require(mintedReindeers < maxSupplyReindeer);
+        mintedReindeers++;
         reindeerWhitelist[msg.sender] = false;
         uint256 tokenId = mintNFT(msg.sender);
         return tokenId;
@@ -109,28 +130,61 @@ contract ElfNFT is ERC721URIStorage, Ownable {
     /**
      * mints 1 token per whitelisted address, does not charge a fee
      */
-    function mintTokenHolderWhitelist()
+    function mintSantaWhitelist()
         public
         returns (uint256)
     {
-        require(tokenHolderWhitelist[msg.sender], "Not on the token holder whitelist");
-        tokenHolderWhitelist[msg.sender] = false;
+        require(santaWhitelist[msg.sender], "Not on the token holder whitelist");
+        require(mintedSantas < maxSupplySanta); // should never fail
+        mintedSantas++;
+        santaWhitelist[msg.sender] = false;
         uint256 tokenId = mintNFT(msg.sender);
         return tokenId;
     }
 
 
      /**
-     * @dev public mint is a payable
+     * @dev public elf mint is a payable
      */
-    function publicMint()
+    function publicElfMint()
+        public
+        payable
+        returns (uint256)
+    {
+        // TODO: decide if batch mint or donation based values
+        require(msg.value >= elfPrice, "did not provide the minimum eth");
+        require(mintedElves < maxSupplyElves);
+        mintedElves++;
+        uint256 tokenId = mintNFT(msg.sender);
+        return tokenId;
+    }
+
+         /**
+     * @dev public reindeer mint is a payable
+     */
+    function publicReindeerMint()
         public
         payable
         returns (uint256)
     {
         require(msg.value >= elfPrice, "did not provide the minimum eth");
+        require(mintedReindeers < maxSupplyReindeer);
+        mintedReindeers++;
         uint256 tokenId = mintNFT(msg.sender);
         return tokenId;
+    }
+
+    function tokenURI(uint256 tokenId)
+    public
+    view
+    virtual
+    override
+    returns (string memory)
+    {
+      require(_exists(tokenId), "ERC721Metadata: query for nonexistent token");
+
+      // TODO: check that this concats correctly
+      return string(abi.encodePacked(baseURI, tokenId, baseExtension));
     }
 
 
@@ -141,12 +195,20 @@ contract ElfNFT is ERC721URIStorage, Ownable {
         _collectionURI = collectionURI;
     }
 
-
     /**
      * @dev collection URI for marketplace display
      */
     function contractURI() public view returns (string memory) {
         return _collectionURI;
+    }
+
+    function setBaseURI(string memory _baseURI) public onlyOwner {
+      require(bytes(_baseURI).length > 0);
+      baseURI = _baseURI;
+    }
+
+    function setBaseExtension(string memory _baseExtension) public onlyOwner {
+      baseExtension = _baseExtension;
     }
 
     /**
