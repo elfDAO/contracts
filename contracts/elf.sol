@@ -5,6 +5,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 contract ElfNFT is ERC721URIStorage, Ownable {
@@ -15,7 +16,7 @@ contract ElfNFT is ERC721URIStorage, Ownable {
     string public baseURI;
     string public baseExtension = ".json";
 
-    // max supply of reindeer
+    // max supply of santa
     uint256 public maxSupplySanta = 5;
     uint256 public mintedSantas = 0;
 
@@ -183,8 +184,7 @@ contract ElfNFT is ERC721URIStorage, Ownable {
     {
       require(_exists(tokenId), "ERC721Metadata: query for nonexistent token");
 
-      // TODO: check that this concats correctly
-      return string(abi.encodePacked(baseURI, tokenId, baseExtension));
+      return string(abi.encodePacked(baseURI, Strings.toString(tokenId), baseExtension));
     }
 
 

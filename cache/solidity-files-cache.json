@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/jaclynchan/Documents/code/elf-dao/contracts/contracts/elf.sol": {
-      "lastModificationDate": 1639419981660,
-      "contentHash": "7bb2eb295bb8654c5409f51e5b3be71f",
+      "lastModificationDate": 1639420538458,
+      "contentHash": "ec712d9f59d092c52377fbcd3bdc627c",
       "sourceName": "contracts/elf.sol",
       "solcConfig": {
         "version": "0.8.0",
@@ -32,6 +32,7 @@
         "@openzeppelin/contracts/token/ERC721/ERC721.sol",
         "@openzeppelin/contracts/utils/Counters.sol",
         "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/utils/Strings.sol",
         "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol"
       ],
       "versionPragmas": [
