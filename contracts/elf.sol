@@ -21,24 +21,21 @@ contract ElfNFT is ERC721URIStorage, Ownable {
     uint256 public mintedSantas = 0;
 
     // max supply of reindeer
-    uint256 public maxSupplyReindeer = 750;
+    uint256 public maxSupplyReindeer = 500;
     uint256 public mintedReindeers = 0;
 
     // max supply of elves
-    uint256 public maxSupplyElves = 4000;
+    uint256 public maxSupplyElves = 720;
     uint256 public mintedElves = 0;
 
-    // The whitelist of reindeers
-    mapping(address => bool) public reindeerWhitelist;
-
-    // The whitelist for santa (top contributors)
-    mapping(address => bool) public santaWhitelist;
+    // The whitelist of worker elves
+    mapping(address => bool) public workerElfWhitelist;
 
     // The public mint elf price
-    uint256 public elfPrice = 0.05 ether; // TODO: decide on price
+    uint256 public elfPrice = 0.1 ether;
 
     // The public mint elf price
-    uint256 public reindeerPrice = 0.1 ether; // TODO: decide on price
+    uint256 public reindeerPrice = 0.5 ether;
 
     constructor(string memory _baseURI, string memory _baseExtension, string memory collectionURI) ERC721("ElfDAO NFT", "ELFDAO") {
         setCollectionURI(collectionURI);
@@ -60,9 +57,9 @@ contract ElfNFT is ERC721URIStorage, Ownable {
     }
 
     /**
-     * @dev for reindeer whitelist
+     * @dev for worker elf whitelist
      */
-    function setReindeerWhitelist(
+    function setWorkerElfWhitelist(
         address[] memory _addresses
     ) public onlyOwner {
         for (uint256 i = 0; i < _addresses.length; i++) {
@@ -70,79 +67,32 @@ contract ElfNFT is ERC721URIStorage, Ownable {
                 _addresses[i] != address(0),
                 "can't add the blackhole address"
             );
-            reindeerWhitelist[_addresses[i]] = true;
+            workerElfWhitelist[_addresses[i]] = true;
         }
     }
 
 
     /**
-     * @dev reverse accounts from reindeer whitelist
+     * @dev reverse accounts from worker elf whitelist
      */
-    function removeReindeerWhitelists(address[] memory _addresses) public onlyOwner {
+    function removeWorkerElfWhitelist(address[] memory _addresses) public onlyOwner {
         for (uint256 i = 0; i < _addresses.length; i++) {
-            reindeerWhitelist[_addresses[i]] = false;
+            workerElfWhitelist[_addresses[i]] = false;
         }
     }
-
-
-    /**
-     * @dev for top 5 contributors
-     */
-    function setSantaWhitelist(
-        address[] memory _addresses
-    ) public onlyOwner {
-        require(_addresses.length <= 5); // maxSupply is 5
-        for (uint256 i = 0; i < _addresses.length; i++) {
-            require(
-                _addresses[i] != address(0),
-                "can't add the blackhole address"
-            );
-            santaWhitelist[_addresses[i]] = true;
-        }
-    }
-
-
-    /**
-     * @dev remove users from Santa whitelist
-     */
-    function removeSantaWhitelists(address[] memory _addresses) public onlyOwner {
-        for (uint256 i = 0; i < _addresses.length; i++) {
-            santaWhitelist[_addresses[i]] = false;
-        }
-    }
-
 
      /**
      * mints 1 token per whitelisted address, does not charge a fee
      */
-    function mintReindeerWhitelist()
+    function mintWorkerElfWhitelistWhitelist()
         public
         returns (uint256)
     {
-        require(reindeerWhitelist[msg.sender], "Not on the reindeer whitelist");
-        require(mintedReindeers < maxSupplyReindeer);
-        mintedReindeers++;
-        reindeerWhitelist[msg.sender] = false;
+        require(workerElfWhitelist[msg.sender], "Not on the worker elf whitelist");
+        workerElfWhitelist[msg.sender] = false;
         uint256 tokenId = mintNFT(msg.sender);
         return tokenId;
     }
-
-
-    /**
-     * mints 1 token per whitelisted address, does not charge a fee
-     */
-    function mintSantaWhitelist()
-        public
-        returns (uint256)
-    {
-        require(santaWhitelist[msg.sender], "Not on the token holder whitelist");
-        require(mintedSantas < maxSupplySanta); // should never fail
-        mintedSantas++;
-        santaWhitelist[msg.sender] = false;
-        uint256 tokenId = mintNFT(msg.sender);
-        return tokenId;
-    }
-
 
      /**
      * @dev public elf mint is a payable
@@ -183,7 +133,6 @@ contract ElfNFT is ERC721URIStorage, Ownable {
     returns (string memory)
     {
       require(_exists(tokenId), "ERC721Metadata: query for nonexistent token");
-
       return string(abi.encodePacked(baseURI, Strings.toString(tokenId), baseExtension));
     }
 
