@@ -1,0 +1,11 @@
+{
+    "attributes": [
+        {
+            "trait_type": "Type",
+            "value": "Santa"
+        }
+    ],
+    "name": "elfDAO Santa",
+    "image": "https://gateway.pinata.cloud/ipfs/QmeaYnpqtZQ4v3ywdBvzDyJuRQTs4TEGYg82jTeFhnGMg1/santa.png",
+    "description": "Ho ho ho! Congratulations on being one of the top 5 contributors to elfDAO!"
+}
