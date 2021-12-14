@@ -1,0 +1,11 @@
+{
+  "name": "elfDAO Worker Elf",
+  "image": "",
+  "description": "",
+  "attributes": [
+    {
+      "trait_type": "Type",
+      "value": "Worker Elf"
+    }
+  ]
+}

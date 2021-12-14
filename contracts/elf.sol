@@ -10,7 +10,6 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 contract ElfNFT is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
     string private _collectionURI;
 
     string public baseURI;
@@ -19,14 +18,20 @@ contract ElfNFT is ERC721URIStorage, Ownable {
     // max supply of santa
     uint256 public maxSupplySanta = 5;
     uint256 public mintedSantas = 0;
+    uint256 public santaId = 1; // santa are from 1-5
 
     // max supply of reindeer
     uint256 public maxSupplyReindeer = 500;
     uint256 public mintedReindeers = 0;
+    uint256 public reindeerId = 6; // reindeer are from 6-505
 
     // max supply of elves
     uint256 public maxSupplyElves = 720;
     uint256 public mintedElves = 0;
+    uint256 public elfId = 506; // elves are from 506-1225
+
+    // worker elves are from 1226 onwards
+    uint256 public workerElfId = 1226;
 
     // The whitelist of worker elves
     mapping(address => bool) public workerElfWhitelist;
@@ -48,12 +53,9 @@ contract ElfNFT is ERC721URIStorage, Ownable {
       reindeerPrice = _reindeerPrice;
     }
 
-    function mintNFT(address recipient) public onlyOwner returns (uint256)
+    function mintNFT(address recipient, uint256 tokenId) public onlyOwner
     {
-        _tokenIds.increment();
-        uint256 newItemId = _tokenIds.current();
-        _mint(recipient, newItemId);
-        return newItemId;
+        _mint(recipient, tokenId);
     }
 
     /**
@@ -70,7 +72,6 @@ contract ElfNFT is ERC721URIStorage, Ownable {
             workerElfWhitelist[_addresses[i]] = true;
         }
     }
-
 
     /**
      * @dev reverse accounts from worker elf whitelist
@@ -90,8 +91,9 @@ contract ElfNFT is ERC721URIStorage, Ownable {
     {
         require(workerElfWhitelist[msg.sender], "Not on the worker elf whitelist");
         workerElfWhitelist[msg.sender] = false;
-        uint256 tokenId = mintNFT(msg.sender);
-        return tokenId;
+        mintNFT(msg.sender, workerElfId);
+        workerElfId++;
+        return workerElfId;
     }
 
      /**
@@ -102,12 +104,12 @@ contract ElfNFT is ERC721URIStorage, Ownable {
         payable
         returns (uint256)
     {
-        // TODO: decide if batch mint or donation based values
         require(msg.value >= elfPrice, "did not provide the minimum eth");
         require(mintedElves < maxSupplyElves);
         mintedElves++;
-        uint256 tokenId = mintNFT(msg.sender);
-        return tokenId;
+        mintNFT(msg.sender, elfId);
+        elfId++;
+        return elfId;
     }
 
          /**
@@ -118,11 +120,12 @@ contract ElfNFT is ERC721URIStorage, Ownable {
         payable
         returns (uint256)
     {
-        require(msg.value >= elfPrice, "did not provide the minimum eth");
+        require(msg.value >= reindeerPrice, "did not provide the minimum eth");
         require(mintedReindeers < maxSupplyReindeer);
         mintedReindeers++;
-        uint256 tokenId = mintNFT(msg.sender);
-        return tokenId;
+        mintNFT(msg.sender, reindeerId);
+        reindeerId++;
+        return reindeerId;
     }
 
     function tokenURI(uint256 tokenId)
