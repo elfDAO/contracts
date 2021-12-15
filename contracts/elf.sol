@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract ElfNFT is ERC721URIStorage, Ownable {
+contract ElfNFT is ERC721URIStorage, Ownable, ReentrancyGuard{
     string private _collectionURI;
 
     string public baseURI;
@@ -100,8 +100,8 @@ contract ElfNFT is ERC721URIStorage, Ownable {
      */
     function publicElfMint()
         public
-        nonReentrant
         payable
+        nonReentrant
         returns (uint256)
     {
         require(msg.value >= elfPrice, "did not provide the minimum eth");
@@ -117,8 +117,8 @@ contract ElfNFT is ERC721URIStorage, Ownable {
      */
     function publicReindeerMint()
         public
-        nonReentrant
         payable
+        nonReentrant
         returns (uint256)
     {
         require(msg.value >= reindeerPrice, "did not provide the minimum eth");
