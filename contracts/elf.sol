@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract ElfNFT is ERC721URIStorage, Ownable {
     string private _collectionURI;
@@ -85,6 +85,7 @@ contract ElfNFT is ERC721URIStorage, Ownable {
      */
     function mintWorkerElfWhitelistWhitelist()
         public
+        nonReentrant
         returns (uint256)
     {
         require(workerElfWhitelist[msg.sender], "Not on the worker elf whitelist");
@@ -99,6 +100,7 @@ contract ElfNFT is ERC721URIStorage, Ownable {
      */
     function publicElfMint()
         public
+        nonReentrant
         payable
         returns (uint256)
     {
@@ -115,6 +117,7 @@ contract ElfNFT is ERC721URIStorage, Ownable {
      */
     function publicReindeerMint()
         public
+        nonReentrant
         payable
         returns (uint256)
     {
