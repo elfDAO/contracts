@@ -83,7 +83,7 @@ contract ElfNFT is ERC721URIStorage, Ownable, ReentrancyGuard{
      /**
      * mints 1 token per whitelisted address, does not charge a fee
      */
-    function mintWorkerElfWhitelistWhitelist()
+    function mintWorkerElfWhitelist()
         public
         nonReentrant
         returns (uint256)
