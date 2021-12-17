@@ -1,176 +1,198 @@
-//Contract based on [https://docs.openzeppelin.com/contracts/3.x/erc721](https://docs.openzeppelin.com/contracts/3.x/erc721)
 // SPDX-License-Identifier: MIT
+//Contract based on [https://docs.openzeppelin.com/contracts/3.x/erc721](https://docs.openzeppelin.com/contracts/3.x/erc721)
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/interfaces/IERC20.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+
 
 contract ElfNFT is ERC721URIStorage, Ownable, ReentrancyGuard{
     string private _collectionURI;
-
     string public baseURI;
-    string public baseExtension = ".json";
 
-    // max supply of santa
-    uint256 public maxSupplySanta = 5;
-    uint256 public mintedSantas = 0;
-    uint256 public santaId = 1; // santa are from 1-5
+    /**
+      * santa are from 1-5 (5 max supply)
+      * worker elves from 6-30 (25 max supply)
+      * reindeer from 31-1000 (970 max supply)
+      * elves are from 1001 onwards (unlimited supply)
+    **/
 
-    // max supply of reindeer
-    uint256 public maxSupplyReindeer = 500;
-    uint256 public mintedReindeers = 0;
-    uint256 public reindeerId = 6; // reindeer are from 6-505
+    uint256 immutable public maxSantaId = 5;
+    uint256 public santaId = 1;
 
-    // max supply of elves
-    uint256 public maxSupplyElves = 720;
-    uint256 public mintedElves = 0;
-    uint256 public elfId = 506; // elves are from 506-1225
+    uint256 immutable public maxWorkerElfId = 25;
+    uint256 public workerElfId = 6;
 
-    // worker elves are from 1226 onwards
-    uint256 public workerElfId = 1226;
+    uint256 immutable public maxReindeerId = 1000;
+    uint256 public reindeerId = 31;
 
-    // The whitelist of worker elves
-    mapping(address => bool) public workerElfWhitelist;
+    uint256 public elfId = 1001;
 
-    // The public mint elf price
-    uint256 public elfPrice = 0.1 ether;
+    // used to validate whitelists
+    bytes32 public santaMerkleRoot;
+    bytes32 public workerElfMerkleRoot;
+    bytes32 public reindeerMerkleRoot;
+    bytes32 public elfMerkleRoot;
 
-    // The public mint elf price
-    uint256 public reindeerPrice = 0.5 ether;
+    // keep track of those who have claimed their NFT
+    mapping(address => bool) public claimed;
 
-    constructor(string memory _baseURI, string memory _baseExtension, string memory collectionURI) ERC721("ElfDAO NFT", "ELFDAO") {
-        setCollectionURI(collectionURI);
+    constructor(string memory _baseURI, string memory collectionURI) ERC721("elfDAO NFT", "ELFDAO") {
         setBaseURI(_baseURI);
-        setBaseExtension(_baseExtension);
-    }
-
-    function setPrice(uint256 _elfPrice, uint256 _reindeerPrice) public onlyOwner  {
-      elfPrice = _elfPrice;
-      reindeerPrice = _reindeerPrice;
-    }
-
-    function mintNFT(address recipient, uint256 tokenId) public onlyOwner
-    {
-        _mint(recipient, tokenId);
+        setCollectionURI(collectionURI);
     }
 
     /**
-     * @dev for worker elf whitelist
+     * @dev validates merkleProof
      */
-    function setWorkerElfWhitelist(
-        address[] memory _addresses
-    ) public onlyOwner {
-        for (uint256 i = 0; i < _addresses.length; i++) {
-            require(
-                _addresses[i] != address(0),
-                "can't add the blackhole address"
-            );
-            workerElfWhitelist[_addresses[i]] = true;
-        }
+    modifier isValidMerkleProof(bytes32[] calldata merkleProof, bytes32 root) {
+        require(
+            MerkleProof.verify(
+                merkleProof,
+                root,
+                keccak256(abi.encodePacked(msg.sender))
+            ),
+            "Address does not exist in list"
+        );
+        _;
     }
+
+    // ============ PUBLIC FUNCTIONS FOR MINTING ============
 
     /**
-     * @dev reverse accounts from worker elf whitelist
-     */
-    function removeWorkerElfWhitelist(address[] memory _addresses) public onlyOwner {
-        for (uint256 i = 0; i < _addresses.length; i++) {
-            workerElfWhitelist[_addresses[i]] = false;
-        }
-    }
-
-     /**
-     * mints 1 token per whitelisted address, does not charge a fee
-     */
-    function mintWorkerElfWhitelist()
+    * @dev mints 1 token per whitelisted santa address, does not charge a fee
+    * Max supply: 5 (token ids: 1-5)
+    */
+    function mintSanta(
+      bytes32[] calldata merkleProof
+    )
         public
+        isValidMerkleProof(merkleProof, workerElfMerkleRoot)
         nonReentrant
-        returns (uint256)
     {
-        require(workerElfWhitelist[msg.sender], "Not on the worker elf whitelist");
-        workerElfWhitelist[msg.sender] = false;
-        mintNFT(msg.sender, workerElfId);
+      require(santaId <= maxSantaId);
+      require(!claimed[msg.sender], "Santa is already claimed by this wallet");
+      _mint(msg.sender, santaId);
+      santaId++;
+      claimed[msg.sender] = true;
+    }
+
+    /**
+    * @dev mints 1 token per whitelisted address, does not charge a fee
+    * Max supply: 25 (token ids: 6-30)
+    */
+    function mintWorkerElf(
+      bytes32[] calldata merkleProof
+    )
+        public
+        isValidMerkleProof(merkleProof, workerElfMerkleRoot)
+        nonReentrant
+    {
+        require(workerElfId <= maxWorkerElfId);
+        require(!claimed[msg.sender], "Worker elf is already claimed by this wallet");
+        _mint(msg.sender, workerElfId);
         workerElfId++;
-        return workerElfId;
+        claimed[msg.sender] = true;
     }
 
-     /**
-     * @dev public elf mint is a payable
-     */
-    function publicElfMint()
+    /**
+    * @dev mints 1 token per whitelisted reindeer address, does not charge a fee
+    * Max supply: 970 (token ids: 31-1000)
+    */
+    function mintReindeer(
+      bytes32[] calldata merkleProof
+    )
         public
-        payable
+        isValidMerkleProof(merkleProof, workerElfMerkleRoot)
         nonReentrant
-        returns (uint256)
     {
-        require(msg.value >= elfPrice, "did not provide the minimum eth");
-        require(mintedElves < maxSupplyElves);
-        mintedElves++;
-        mintNFT(msg.sender, elfId);
-        elfId++;
-        return elfId;
-    }
-
-         /**
-     * @dev public reindeer mint is a payable
-     */
-    function publicReindeerMint()
-        public
-        payable
-        nonReentrant
-        returns (uint256)
-    {
-        require(msg.value >= reindeerPrice, "did not provide the minimum eth");
-        require(mintedReindeers < maxSupplyReindeer);
-        mintedReindeers++;
-        mintNFT(msg.sender, reindeerId);
+        require(reindeerId < maxReindeerId);
+        require(!claimed[msg.sender], "Reindeer is already claimed by this wallet");
+        _mint(msg.sender, reindeerId);
         reindeerId++;
-        return reindeerId;
+        claimed[msg.sender] = true;
     }
 
+    /**
+    * @dev mints 1 token per whitelisted elf address, does not charge a fee
+    * no max supply
+    */
+    function mintElf(
+      bytes32[] calldata merkleProof
+    )
+        public
+        isValidMerkleProof(merkleProof, workerElfMerkleRoot)
+        nonReentrant
+    {
+        require(!claimed[msg.sender], "Elf is already claimed by this wallet");
+        _mint(msg.sender, elfId);
+        elfId++;
+        claimed[msg.sender] = true;
+    }
+
+    // ============ PUBLIC READ-ONLY FUNCTIONS ============
     function tokenURI(uint256 tokenId)
-    public
-    view
-    virtual
-    override
-    returns (string memory)
+      public
+      view
+      virtual
+      override
+      returns (string memory)
     {
       require(_exists(tokenId), "ERC721Metadata: query for nonexistent token");
-      return string(abi.encodePacked(baseURI, Strings.toString(tokenId), baseExtension));
-    }
-
-
-    /**
-     * @dev set collection URI for marketplace display
-     */
-    function setCollectionURI(string memory collectionURI) internal virtual onlyOwner {
-        _collectionURI = collectionURI;
+      return string(abi.encodePacked(baseURI, Strings.toString(tokenId), ".json"));
     }
 
     /**
-     * @dev collection URI for marketplace display
-     */
+    * @dev collection URI for marketplace display
+    */
     function contractURI() public view returns (string memory) {
         return _collectionURI;
     }
 
+
+    // ============ OWNER-ONLY ADMIN FUNCTIONS ============
     function setBaseURI(string memory _baseURI) public onlyOwner {
-      require(bytes(_baseURI).length > 0);
       baseURI = _baseURI;
     }
 
-    function setBaseExtension(string memory _baseExtension) public onlyOwner {
-      baseExtension = _baseExtension;
+    /**
+    * @dev set collection URI for marketplace display
+    */
+    function setCollectionURI(string memory collectionURI) internal virtual onlyOwner {
+        _collectionURI = collectionURI;
+    }
+
+    function setSantaMerkleRoot(bytes32 merkleRoot) external onlyOwner {
+        santaMerkleRoot = merkleRoot;
+    }
+
+    function setWorkerElfMerkleRoot(bytes32 merkleRoot) external onlyOwner {
+        workerElfMerkleRoot = merkleRoot;
+    }
+
+    function setReindeerMerkleRoot(bytes32 merkleRoot) external onlyOwner {
+        reindeerMerkleRoot = merkleRoot;
+    }
+
+    function setElfMerkleRoot(bytes32 merkleRoot) external onlyOwner {
+        elfMerkleRoot = merkleRoot;
     }
 
     /**
      * @dev withdraw funds for elf dao to specified account
+     * should not be needed ever
      */
-    function withdraw(address payable _to) public onlyOwner {
-      // get the amount of Ether stored in this contract
-        uint amount = address(this).balance;
-        (bool success, ) = _to.call{value: amount}("");
-        require(success, "Failed to send Ether");
+    function withdraw() public onlyOwner {
+        uint256 balance = address(this).balance;
+        payable(msg.sender).transfer(balance);
+    }
+
+    function withdrawTokens(IERC20 token) public onlyOwner {
+        uint256 balance = token.balanceOf(address(this));
+        token.transfer(msg.sender, balance);
     }
 }
