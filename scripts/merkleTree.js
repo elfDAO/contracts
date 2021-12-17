@@ -1,30 +1,43 @@
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
 
-const elfAddresses = require('../whitelist/elfAddress.json');
-const reindeerAddresses = require('../whitelist/reindeerAddress.json')
-const workerElfAddresses = require('../whitelist/workerElfAddress.json')
-const santaAddresses = require('../whitelist/santaAddress.json')
+const generateElfRoot = () => {
+  const elfAddresses = require('../whitelist/elfAddress.json');
+  const elfLeafNodes = elfAddresses.map((addr) => keccak256(addr));
+  const elfMerkleTree = new MerkleTree(elfLeafNodes, keccak256, { sortPairs: true });
+  const elfRootHash = elfMerkleTree.getRoot();
+  console.log('elfRootHash', elfRootHash.toString('hex'));
+  return elfRootHash;
+}
 
-const elfLeafNodes = elfAddresses.map((addr) => keccak256(addr));
-const elfMerkleTree = new MerkleTree(elfLeafNodes, keccak256, { sortPairs: true });
-const elfRootHash = elfMerkleTree.getRoot();
-console.log('elfRootHash', elfRootHash.toString('hex'));
+const generateReindeerRoot = () => {
+  const reindeerAddresses = require('../whitelist/reindeerAddress.json');
+  const reindeerLeafNodes = reindeerAddresses.map((addr) => keccak256(addr));
+  const reindeerMerkleTree = new MerkleTree(reindeerLeafNodes, keccak256, { sortPairs: true });
+  const reindeerRootHash = reindeerMerkleTree.getRoot();
 
-const reindeerLeafNodes = reindeerAddresses.map((addr) => keccak256(addr));
-const reindeerMerkleTree = new MerkleTree(reindeerLeafNodes, keccak256, { sortPairs: true });
-const reindeerRootHash = reindeerMerkleTree.getRoot();
+  console.log('reindeerRootHash', reindeerRootHash.toString('hex'));
+  return reindeerRootHash;
+};
 
-console.log('reindeerRootHash', reindeerRootHash.toString('hex'));
+const generateWorkerElfRoot = () => {
+  const workerElfAddresses = require('../whitelist/workerElfAddress.json')
+  const workerElfLeafNodes = workerElfAddresses.map((addr) => keccak256(addr));
+  const workerElfMerkleTree = new MerkleTree(workerElfLeafNodes, keccak256, { sortPairs: true });
+  const workerElfRootHash = workerElfMerkleTree.getRoot();
 
-const workerElfLeafNodes = workerElfAddresses.map((addr) => keccak256(addr));
-const workerElfMerkleTree = new MerkleTree(workerElfLeafNodes, keccak256, { sortPairs: true });
-const workerElfRootHash = workerElfMerkleTree.getRoot();
+  console.log('workerElfRootHash', workerElfRootHash.toString('hex'));
+  return workerElfRootHashl;
+};
 
-console.log('workerElfRootHash', workerElfRootHash.toString('hex'));
+const generateSantaRoot = () => {
+  const santaAddresses = require('../whitelist/santaAddress.json')
+  const santaLeafNodes = santaAddresses.map((addr) => keccak256(addr));
+  const santaMerkleTree = new MerkleTree(santaLeafNodes, keccak256, { sortPairs: true });
+  const santaRootHash = santaMerkleTree.getRoot();
 
-const santaLeafNodes = santaAddresses.map((addr) => keccak256(addr));
-const santaMerkleTree = new MerkleTree(santaLeafNodes, keccak256, { sortPairs: true });
-const santaRootHash = santaMerkleTree.getRoot();
+  console.log('santaRootHash', santaRootHash.toString('hex'));
+  return santaRootHash;
+};
 
-console.log('santaRootHash', santaRootHash.toString('hex'));
+module.exports = { generateElfRoot, generateReindeerRoot, generateSantaRoot, generateWorkerElfRoot };
