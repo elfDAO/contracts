@@ -71,7 +71,7 @@ contract ElfNFT is ERC721URIStorage, Ownable, ReentrancyGuard{
       bytes32[] calldata merkleProof
     )
         public
-        isValidMerkleProof(merkleProof, workerElfMerkleRoot)
+        isValidMerkleProof(merkleProof, santaMerkleRoot)
         nonReentrant
     {
       require(santaId <= maxSantaId);
@@ -107,7 +107,7 @@ contract ElfNFT is ERC721URIStorage, Ownable, ReentrancyGuard{
       bytes32[] calldata merkleProof
     )
         public
-        isValidMerkleProof(merkleProof, workerElfMerkleRoot)
+        isValidMerkleProof(merkleProof, reindeerMerkleRoot)
         nonReentrant
     {
         require(reindeerId < maxReindeerId);
@@ -125,7 +125,7 @@ contract ElfNFT is ERC721URIStorage, Ownable, ReentrancyGuard{
       bytes32[] calldata merkleProof
     )
         public
-        isValidMerkleProof(merkleProof, workerElfMerkleRoot)
+        isValidMerkleProof(merkleProof, elfMerkleRoot)
         nonReentrant
     {
         require(!claimed[msg.sender], "Elf is already claimed by this wallet");
