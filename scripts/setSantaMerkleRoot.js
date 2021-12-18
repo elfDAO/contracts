@@ -8,12 +8,12 @@ const { createAlchemyWeb3 } = require("@alch/alchemy-web3")
 const web3 = createAlchemyWeb3(API_URL)
 
 const contract = require("../artifacts/contracts/elf.sol/ElfNFT.json")
-const { generateElfRoot } = require("./merkleTree")
+const { generateSantaRoot } = require("./merkleTree")
 const contractAddress = process.env.CONTRACT_ADDRESS
 
 const nftContract = new web3.eth.Contract(contract.abi, contractAddress)
 
-async function setElfMerkleRoot(root) {
+async function setSantaMerkleRoot(generatedRoot) {
   let nonce = await web3.eth.getTransactionCount(PUBLIC_KEY, 'latest'); //get latest nonce
   //the transaction
   const tx = {
@@ -21,7 +21,7 @@ async function setElfMerkleRoot(root) {
     'to': contractAddress,
     'nonce': nonce,
     'gas': 200000, // set the gas limit
-    'data': nftContract.methods.setElfMerkleRoot(root).encodeABI()
+    'data': nftContract.methods.setSantaMerkleRoot(generatedRoot).encodeABI()
   };
 
   const signPromise = web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)
@@ -44,12 +44,12 @@ async function setElfMerkleRoot(root) {
           }
         }
       )
-      console.log(`setElfMerkleRoot is complete! Set root to ${root.toString('hex')}`);
+      console.log(`setSantaMerkleRoot is complete! Set root to ${root.toString('hex')}`);
     })
     .catch((err) => {
       console.log(" Promise failed:", err)
     })
 }
 
-const elfRoot = generateElfRoot();
-setElfMerkleRoot(elfRoot)
+const root = generateSantaRoot();
+setSantaMerkleRoot(root)
