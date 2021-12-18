@@ -1,11 +1,5 @@
 {
-    "attributes": [
-        {
-            "trait_type": "Type",
-            "value": "Elf"
-        }
-    ],
-    "name": "elfDAO Elf",
-    "image": "https://gateway.pinata.cloud/ipfs/QmeaYnpqtZQ4v3ywdBvzDyJuRQTs4TEGYg82jTeFhnGMg1/elf.png",
-    "description": ""
+    "name": "elfDAO Reindeer #831",
+    "image": "https://gateway.pinata.cloud/ipfs/QmcuDmd571ntKgW1qnMVrD6LwX1MoR9dYSFeH3nMnLbxco/reindeer.svg",
+    "description": "Reindeers are the bearers of holiday cheer. Springing high and far into the skies, they deliver presents to kids in every corner of the world. Be sure to give the elves a nod before launching off!"
 }

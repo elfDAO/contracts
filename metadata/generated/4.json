@@ -1,11 +1,5 @@
 {
-    "attributes": [
-        {
-            "trait_type": "Type",
-            "value": "Santa"
-        }
-    ],
-    "name": "elfDAO Santa",
-    "image": "https://gateway.pinata.cloud/ipfs/QmeaYnpqtZQ4v3ywdBvzDyJuRQTs4TEGYg82jTeFhnGMg1/santa.png",
-    "description": "Ho ho ho! Congratulations on being one of the top 5 contributors to elfDAO!"
+    "name": "elfDAO Santa #4",
+    "image": "https://gateway.pinata.cloud/ipfs/QmcuDmd571ntKgW1qnMVrD6LwX1MoR9dYSFeH3nMnLbxco/santa.svg",
+    "description": "Ho ho ho! Thank you for being one of the top 5 contributors to elfDAO! Santas are the givers of holiday cheer. Filled with endless joy, they are always ready to envelope you in big, warm hugs. Thank you, our most generous contributors, for fueling this holiday season with bountiful love."
 }

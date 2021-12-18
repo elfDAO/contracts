@@ -1,11 +1,6 @@
 {
-    "attributes": [
-        {
-            "trait_type": "Type",
-            "value": "Reindeer"
-        }
-    ],
-    "name": "elfDAO Reindeer",
-    "image": "https://gateway.pinata.cloud/ipfs/QmeaYnpqtZQ4v3ywdBvzDyJuRQTs4TEGYg82jTeFhnGMg1/reindeer.png",
-    "description": ""
+    "attributes": [],
+    "name": "elfDAO Worker Elf #23",
+    "image": "https://gateway.pinata.cloud/ipfs/QmcuDmd571ntKgW1qnMVrD6LwX1MoR9dYSFeH3nMnLbxco/worker-elf.svg",
+    "description": "Thank you for your generous contributions to elfDAO. Worker elves are the backbone of the project \u2013 assembling the magic and working together to spread holiday joy."
 }

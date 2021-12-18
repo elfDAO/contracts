@@ -1,11 +1,5 @@
 {
-  "name": "elfDAO Elf",
+  "name": "Elf",
   "image": "",
-  "description": "",
-  "attributes": [
-    {
-      "trait_type": "Type",
-      "value": "Elf"
-    }
-  ]
+  "description": "Elves are the builders of holiday cheer. Always tinkering with their toolboxes and crafting new surprises, they make every present with love. They are delighted to have you join their cohort! The more the merrier, it is with Santa’s little helpers always."
 }

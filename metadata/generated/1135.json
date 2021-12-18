@@ -1,11 +1,5 @@
 {
-    "attributes": [
-        {
-            "trait_type": "Type",
-            "value": "Elf"
-        }
-    ],
-    "name": "elfDAO Elf",
-    "image": "https://gateway.pinata.cloud/ipfs/QmeaYnpqtZQ4v3ywdBvzDyJuRQTs4TEGYg82jTeFhnGMg1/elf.png",
-    "description": ""
+    "name": "elfDAO Elf #135",
+    "image": "https://gateway.pinata.cloud/ipfs/QmcuDmd571ntKgW1qnMVrD6LwX1MoR9dYSFeH3nMnLbxco/elf.svg",
+    "description": "Elves are the builders of holiday cheer. Always tinkering with their toolboxes and crafting new surprises, they make every present with love. They are delighted to have you join their cohort! The more the merrier, it is with Santa\u2019s little helpers always."
 }
