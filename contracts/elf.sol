@@ -110,7 +110,7 @@ contract ElfNFT is ERC721URIStorage, Ownable, ReentrancyGuard{
         isValidMerkleProof(merkleProof, reindeerMerkleRoot)
         nonReentrant
     {
-        require(reindeerId < maxReindeerId);
+        require(reindeerId <= maxReindeerId);
         require(!claimed[msg.sender], "Reindeer is already claimed by this wallet");
         _mint(msg.sender, reindeerId);
         reindeerId++;
