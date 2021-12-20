@@ -92,7 +92,7 @@ contract ElfNFT is ERC721URIStorage, Ownable, ReentrancyGuard{
         isValidMerkleProof(merkleProof, workerElfMerkleRoot)
         nonReentrant
     {
-        require(workerElfId <= maxWorkerElfId);
+        require(workerElfId <= maxWorkerElfId, "minted the maximum # of elves");
         require(!claimed[msg.sender], "Worker elf is already claimed by this wallet");
         _mint(msg.sender, workerElfId);
         workerElfId++;
@@ -143,7 +143,7 @@ contract ElfNFT is ERC721URIStorage, Ownable, ReentrancyGuard{
       returns (string memory)
     {
       require(_exists(tokenId), "ERC721Metadata: query for nonexistent token");
-      return string(abi.encodePacked(baseURI, Strings.toString(tokenId), ".json"));
+      return string(abi.encode(baseURI, Strings.toString(tokenId), ".json"));
     }
 
     /**
