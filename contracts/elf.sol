@@ -40,6 +40,8 @@ contract ElfNFT is ERC721URIStorage, Ownable, ReentrancyGuard{
 
     // keep track of those who have claimed their NFT
     mapping(address => bool) public claimed;
+    // santa claimers can claim both reindeer and a santa
+    mapping(address => bool) public claimedSanta;
 
     constructor(string memory _baseURI, string memory collectionURI) ERC721("elfDAO NFT", "ELFDAO") {
         setBaseURI(_baseURI);
@@ -75,7 +77,7 @@ contract ElfNFT is ERC721URIStorage, Ownable, ReentrancyGuard{
         nonReentrant
     {
       require(santaId <= maxSantaId);
-      require(!claimed[msg.sender], "Santa is already claimed by this wallet");
+      require(!claimedSanta[msg.sender], "Santa is already claimed by this wallet");
       _mint(msg.sender, santaId);
       santaId++;
       claimed[msg.sender] = true;
