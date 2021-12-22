@@ -33,15 +33,12 @@ contract ElfNFT is ERC721URIStorage, Ownable, ReentrancyGuard{
     uint256 public elfId = 1001;
 
     // used to validate whitelists
-    bytes32 public santaMerkleRoot;
     bytes32 public workerElfMerkleRoot;
     bytes32 public reindeerMerkleRoot;
     bytes32 public elfMerkleRoot;
 
     // keep track of those who have claimed their NFT
     mapping(address => bool) public claimed;
-    // santa claimers can claim both reindeer and a santa
-    mapping(address => bool) public claimedSanta;
 
     constructor(string memory _baseURI, string memory collectionURI) ERC721("elfDAO NFT", "ELFDAO") {
         setBaseURI(_baseURI);
@@ -68,19 +65,16 @@ contract ElfNFT is ERC721URIStorage, Ownable, ReentrancyGuard{
     /**
     * @dev mints 1 token per whitelisted santa address, does not charge a fee
     * Max supply: 5 (token ids: 1-5)
+    * will be minted and airdropped to santa recipients
     */
-    function mintSanta(
-      bytes32[] calldata merkleProof
-    )
+    function mintSanta()
         public
-        isValidMerkleProof(merkleProof, santaMerkleRoot)
         nonReentrant
+        onlyOwner
     {
       require(santaId <= maxSantaId);
-      require(!claimedSanta[msg.sender], "Santa is already claimed by this wallet");
       _mint(msg.sender, santaId);
       santaId++;
-      claimed[msg.sender] = true;
     }
 
     /**
@@ -166,10 +160,6 @@ contract ElfNFT is ERC721URIStorage, Ownable, ReentrancyGuard{
     */
     function setCollectionURI(string memory collectionURI) internal virtual onlyOwner {
         _collectionURI = collectionURI;
-    }
-
-    function setSantaMerkleRoot(bytes32 merkleRoot) external onlyOwner {
-        santaMerkleRoot = merkleRoot;
     }
 
     function setWorkerElfMerkleRoot(bytes32 merkleRoot) external onlyOwner {
