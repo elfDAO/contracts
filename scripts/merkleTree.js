@@ -16,7 +16,7 @@ const generateReindeerRoot = () => {
   const reindeerMerkleTree = new MerkleTree(reindeerLeafNodes, keccak256, { sortPairs: true });
   const reindeerRootHash = reindeerMerkleTree.getHexRoot();
 
-  console.log('reindeerRootHash', reindeerRootHash.toString('hex'));
+  console.log('reindeerRootHash', reindeerRootHash);
   return reindeerRootHash;
 };
 
@@ -26,7 +26,7 @@ const generateWorkerElfRoot = () => {
   const workerElfMerkleTree = new MerkleTree(workerElfLeafNodes, keccak256, { sortPairs: true });
   const workerElfRootHash = workerElfMerkleTree.getHexRoot();
 
-  console.log('workerElfRootHash', workerElfRootHash.toString('hex'));
+  console.log('workerElfRootHash', workerElfRootHash);
   return workerElfRootHash;
 };
 
@@ -36,8 +36,11 @@ const generateSantaRoot = () => {
   const santaMerkleTree = new MerkleTree(santaLeafNodes, keccak256, { sortPairs: true });
   const santaRootHash = santaMerkleTree.getHexRoot();
 
-  console.log('santaRootHash', santaRootHash.toString('hex'));
+  console.log('santaRootHash', santaRootHash);
   return santaRootHash;
 };
 
 module.exports = { generateElfRoot, generateReindeerRoot, generateSantaRoot, generateWorkerElfRoot };
+
+generateElfRoot()
+generateReindeerRoot()
