@@ -17,3 +17,15 @@
     ```
     npx hardhat run scripts/deploy.js --network rinkeby
     ```
+
+## Set Base URI
+```
+node scripts/setBaseURI.js
+```
+
+## Set Merkle Root
+```
+node scripts/setElfMerkleRoot.js
+node scripts/setReindeerMerkleRoot.js
+node scripts/setWorkerElfMerkleRoot.js
+```
