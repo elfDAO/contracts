@@ -63,7 +63,7 @@ contract ElfNFT is ERC721URIStorage, Ownable, ReentrancyGuard{
     // ============ PUBLIC FUNCTIONS FOR MINTING ============
 
     /**
-    * @dev mints 1 token per whitelisted santa address, does not charge a fee
+    * @dev does not charge a fee
     * Max supply: 5 (token ids: 1-5)
     * will be minted and airdropped to santa recipients
     */
