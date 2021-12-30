@@ -17,7 +17,7 @@ module.exports = {
       mainnet: {
          url: MAINNET_API_URL,
          accounts: [`0x${PRIVATE_KEY}`],
-         gasPrice: 51500000000, // 51.5 gwei
+         gasPrice: 55000000000, // 55 gwei
       },
       polygon: {
          url: POLYGON_API_URL,
