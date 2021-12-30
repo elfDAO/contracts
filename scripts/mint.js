@@ -12,7 +12,7 @@ const contractAddress = process.env.CONTRACT_ADDRESS
 
 const nftContract = new web3.eth.Contract(contract.abi, contractAddress)
 
-async function mintNFT(tokenURI, recipient, nonce) {
+async function mintNFT(nonce) {
 //the transaction
   const tx = {
     'from': PUBLIC_KEY,
@@ -20,7 +20,7 @@ async function mintNFT(tokenURI, recipient, nonce) {
     'nonce': nonce,
     'gasPrice': 900000000, // edit the gas price
     'gas': 200000, // set the gas
-    'data': nftContract.methods.mintNFT(recipient, tokenURI).encodeABI()
+    'data': nftContract.methods.mintSanta().encodeABI()
   };
 
   const signPromise = web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)
@@ -49,15 +49,13 @@ async function mintNFT(tokenURI, recipient, nonce) {
     })
 }
 
-async function mintNFTs(mintList) {
+async function mintNFTs() {
   let nonce = await web3.eth.getTransactionCount(PUBLIC_KEY, 'latest'); //get latest nonce
-  for(let i = 0; i < mintList.length; i++) {
-    const mint = mintList[i];
-    mintNFT(mint["tokenURI"], mint["recipient"], nonce)
+  for(let i = 0; i < 5; i++) {
+    mintNFT(nonce)
     nonce += 1
   }
-  console.log(`Minting is complete! Minted ${mintList.length} tokens`);
+  console.log(`Minting is complete! Minted ${mintList.length} santa tokens`);
 }
 
-const mints = require("../mints/mint-data.json")
 mintNFTs(mints)
