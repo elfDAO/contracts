@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 
-contract ElfNFT is ERC721URIStorage, Ownable, ReentrancyGuard{
+contract ElfDAO is ERC721URIStorage, Ownable, ReentrancyGuard{
     string private _collectionURI;
     string public baseURI;
 
