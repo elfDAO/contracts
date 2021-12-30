@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/jaclynchan/Documents/code/elf-dao/contracts/contracts/elf.sol": {
-      "lastModificationDate": 1640131231025,
-      "contentHash": "66ffcf35ce250108a3f0ce786b2bea17",
+      "lastModificationDate": 1640836336261,
+      "contentHash": "e2373a3b9049c922dc955596decdd152",
       "sourceName": "contracts/elf.sol",
       "solcConfig": {
         "version": "0.8.0",

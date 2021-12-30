@@ -139,7 +139,7 @@ contract ElfNFT is ERC721URIStorage, Ownable, ReentrancyGuard{
       returns (string memory)
     {
       require(_exists(tokenId), "ERC721Metadata: query for nonexistent token");
-      return string(abi.encode(baseURI, Strings.toString(tokenId), ".json"));
+      return string(abi.encodePacked(baseURI, Strings.toString(tokenId), ".json"));
     }
 
     /**
