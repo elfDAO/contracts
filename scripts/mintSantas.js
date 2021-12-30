@@ -7,7 +7,7 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3")
 const web3 = createAlchemyWeb3(API_URL)
 
-const contract = require("../artifacts/contracts/CrypternF21Celebration.sol/CrypternF21NFT.json")
+const contract = require("../artifacts/contracts/elf.sol/ElfNFT.json")
 const contractAddress = process.env.CONTRACT_ADDRESS
 
 const nftContract = new web3.eth.Contract(contract.abi, contractAddress)
@@ -55,7 +55,7 @@ async function mintNFTs() {
     mintNFT(nonce)
     nonce += 1
   }
-  console.log(`Minting is complete! Minted ${mintList.length} santa tokens`);
+  console.log(`Minting is complete! Minted 5 santa tokens`);
 }
 
-mintNFTs(mints)
+mintNFTs()
