@@ -1,13 +1,13 @@
 require("dotenv").config()
 
-const API_URL = process.env.RINKEBY_API_URL // change this based on the network
+const API_URL = process.env.MAINNET_API_URL // change this based on the network
 const PUBLIC_KEY = process.env.PUBLIC_KEY
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3")
 const web3 = createAlchemyWeb3(API_URL)
 
-const contract = require("../artifacts/contracts/elf.sol/ElfNFT.json")
+const contract = require("../artifacts/contracts/elf.sol/ElfDAO.json")
 const { generateReindeerRoot } = require("./merkleTree")
 const contractAddress = process.env.CONTRACT_ADDRESS
 
@@ -20,7 +20,7 @@ async function setReindeerMerkleRoot(generatedRoot) {
     'from': PUBLIC_KEY,
     'to': contractAddress,
     'nonce': nonce,
-    'gasPrice': 60000000000, // 60 gwei
+    'gasPrice': 55000000000, // 55 gwei
     'gas': 200000, // set the gas limit
     'data': nftContract.methods.setReindeerMerkleRoot(generatedRoot).encodeABI()
   };

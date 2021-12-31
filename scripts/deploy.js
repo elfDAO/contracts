@@ -1,6 +1,6 @@
 async function main() {
   // update the name here
-  const ElfNFT = await ethers.getContractFactory("ElfNFT")
+  const ElfNFT = await ethers.getContractFactory("ElfDAO")
 
   // Start deployment, returning a promise that resolves to a contract object
   const elfNFT = await ElfNFT.deploy(

@@ -7,7 +7,7 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3")
 const web3 = createAlchemyWeb3(API_URL)
 
-const contract = require("../artifacts/contracts/elf.sol/ElfNFT.json")
+const contract = require("../artifacts/contracts/elf.sol/ElfDAO.json")
 const { generateElfRoot } = require("./merkleTree")
 const contractAddress = process.env.CONTRACT_ADDRESS
 
@@ -20,7 +20,7 @@ async function setElfMerkleRoot(root) {
     'from': PUBLIC_KEY,
     'to': contractAddress,
     'nonce': nonce,
-    'gasPrice': 60000000000, // 60 gwei
+    'gasPrice': 55000000000, // 55 gwei
     'gas': 200000, // set the gas limit
     'data': nftContract.methods.setElfMerkleRoot(root).encodeABI()
   };
