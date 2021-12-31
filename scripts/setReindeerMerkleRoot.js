@@ -21,7 +21,7 @@ async function setReindeerMerkleRoot(generatedRoot) {
     'to': contractAddress,
     'nonce': nonce,
     'gasPrice': 55000000000, // 55 gwei
-    'gas': 200000, // set the gas limit
+    'gas': 100000, // set the gas limit
     'data': nftContract.methods.setReindeerMerkleRoot(generatedRoot).encodeABI()
   };
 
