@@ -1,6 +1,6 @@
 require("dotenv").config()
 
-const API_URL = process.env.RINKEBY_API_URL // change this based on the network
+const API_URL = process.env.MAINNET_API_URL // change this based on the network
 const PUBLIC_KEY = process.env.PUBLIC_KEY
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 

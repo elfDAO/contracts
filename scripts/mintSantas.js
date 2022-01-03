@@ -1,6 +1,6 @@
 require("dotenv").config()
 
-const API_URL = process.env.RINKEBY_API_URL // change this based on the network
+const API_URL = process.env.MAINNET_API_URL // change this based on the network
 const PUBLIC_KEY = process.env.PUBLIC_KEY
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 
@@ -18,7 +18,7 @@ async function mintNFT(nonce) {
     'from': PUBLIC_KEY,
     'to': contractAddress,
     'nonce': nonce,
-    'gasPrice': 900000000, // edit the gas price
+    'gasPrice': 55000000000, // 55 gwei
     'gas': 200000, // set the gas
     'data': nftContract.methods.mintSanta().encodeABI()
   };
