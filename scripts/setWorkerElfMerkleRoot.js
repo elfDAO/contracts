@@ -20,8 +20,8 @@ async function setWorkerElfMerkleRoot(generatedRoot) {
     'from': PUBLIC_KEY,
     'to': contractAddress,
     'nonce': nonce,
-    'gasPrice': 60000000000, // 60 gwei
-    'gas': 200000, // set the gas limit
+    'gasPrice': 100000000000, // 100 gwei
+    'gas': 100000, // set the gas limit
     'data': nftContract.methods.setWorkerElfMerkleRoot(generatedRoot).encodeABI()
   };
 
